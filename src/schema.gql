@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Pet {
-  id: Int!
+  id: Float!
 
   """Tuổi của thú cưng"""
   age: Int!
@@ -16,13 +16,12 @@ type Pet {
 }
 
 type Query {
+  findPetBySpecies(species: String!): Pet!
   pets: [Pet!]!
-  pet(id: Int!): Pet!
 }
 
 type Mutation {
   createPet(createPetInput: CreatePetInput!): Pet!
-  removePet(id: Int!): Pet!
 }
 
 input CreatePetInput {

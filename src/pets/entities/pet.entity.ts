@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 @ObjectType()
 export class Pet {
-  @Field(() => Int)
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   id: number;
 
