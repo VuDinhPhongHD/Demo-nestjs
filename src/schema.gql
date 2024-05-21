@@ -1,0 +1,37 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Pet {
+  id: Int!
+
+  """Tuổi của thú cưng"""
+  age: Int!
+
+  """Tên của thú cưng"""
+  name: String!
+
+  """Loài của thú cưng"""
+  species: String!
+}
+
+type Query {
+  pets: [Pet!]!
+  pet(id: Int!): Pet!
+}
+
+type Mutation {
+  createPet(createPetInput: CreatePetInput!): Pet!
+  removePet(id: Int!): Pet!
+}
+
+input CreatePetInput {
+  """Tên của thú cưng"""
+  name: String!
+
+  """Tuổi của thú cưng"""
+  age: Float!
+
+  """Loài của thú cưng"""
+  species: String!
+}
