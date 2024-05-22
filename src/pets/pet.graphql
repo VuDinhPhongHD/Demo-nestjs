@@ -1,0 +1,28 @@
+type Mutation{
+    createPet(input: CreatePetInput): Pet
+}
+
+type Query {
+  findAll(
+    sortBy: String
+    sortOrder: String
+    search: String
+    filterAge: Int
+    filterSpecies: String
+    skip: Int
+    take: Int
+  ): [Pet]
+}
+
+type Pet{
+    id: ID!
+    age: Int
+    name: String
+    species: String
+}
+
+input CreatePetInput {
+  name: String
+  age: Int
+  species: String
+}

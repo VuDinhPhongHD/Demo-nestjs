@@ -9,11 +9,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Pet } from './pets/entities/pet.entity';
 
 @Module({
-  imports: [GraphQLModule.forRoot<ApolloDriverConfig>({
-    driver: ApolloDriver,
-    autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    path: '/pet',
-  }),
+  imports: [GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/graphql.ts'),
+        outputAs: 'interface', // or 'interface'
+      },
+    }),
   TypeOrmModule.forRoot({
     type: 'postgres',
     host: 'localhost',

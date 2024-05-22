@@ -3,7 +3,8 @@
 # ------------------------------------------------------
 
 type Pet {
-  id: Float!
+  """ID của thú cưng"""
+  id: ID!
 
   """Tuổi của thú cưng"""
   age: Int!
