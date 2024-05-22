@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
-import { CreatePetInput } from './dto/create-pet.input';
+import { CreatePetDto } from './dto/create-pet.input';
 
 @Injectable()
 export class PetsService {
@@ -11,7 +11,7 @@ export class PetsService {
     private petsRepository: Repository<Pet>,
   ) { }
 
-  async create(createPetInput: CreatePetInput): Promise<Pet> {
+  async create(createPetInput: CreatePetDto): Promise<Pet> {
     const pet = new Pet();
     pet.name = createPetInput.name;
     pet.age = createPetInput.age;

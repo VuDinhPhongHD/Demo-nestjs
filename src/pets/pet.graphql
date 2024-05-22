@@ -1,5 +1,5 @@
 type Mutation{
-    createPet(input: CreatePetInput): Pet
+    createPet(input: CreatePetInput): PetInput
 }
 
 type Query {
@@ -11,10 +11,10 @@ type Query {
     filterSpecies: String
     skip: Int
     take: Int
-  ): [Pet]
+  ): [PetInput]
 }
 
-type Pet{
+type PetInput{
     id: ID!
     age: Int
     name: String

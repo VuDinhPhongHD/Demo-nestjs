@@ -1,14 +1,14 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PetsService } from './pets.service';
 import { Pet } from './entities/pet.entity';
-import { CreatePetInput } from './dto/create-pet.input';
+import { CreatePetDto } from './dto/create-pet.input';
 
 @Resolver(() => Pet)
 export class PetsResolver {
   constructor(private readonly petsService: PetsService) { }
 
   @Mutation('createPet')
-  async createPet(@Args('input') createPetInput: CreatePetInput): Promise<Pet> {
+  async createPet(@Args('input') createPetInput: CreatePetDto): Promise<Pet> {
     return this.petsService.create(createPetInput);
   }
 

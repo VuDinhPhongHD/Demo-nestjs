@@ -14,7 +14,7 @@ import { Pet } from './pets/entities/pet.entity';
       typePaths: ['./**/*.graphql'],
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
-        outputAs: 'interface', // or 'interface'
+        outputAs: 'class', // or 'interface',
       },
     }),
   TypeOrmModule.forRoot({

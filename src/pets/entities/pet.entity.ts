@@ -1,12 +1,14 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { PetInput } from 'src/graphql';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Pet {
+export class Pet implements PetInput {
   @Field(() => ID, { description: 'ID của thú cưng' })
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
 
   @Field(() => Int, { description: 'Tuổi của thú cưng' })
   @Column()

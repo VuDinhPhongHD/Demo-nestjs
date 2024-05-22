@@ -8,21 +8,21 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export interface CreatePetInput {
+export class CreatePetInput {
     name?: Nullable<string>;
     age?: Nullable<number>;
     species?: Nullable<string>;
 }
 
-export interface IMutation {
-    createPet(input?: Nullable<CreatePetInput>): Nullable<Pet> | Promise<Nullable<Pet>>;
+export abstract class IMutation {
+    abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetInput> | Promise<Nullable<PetInput>>;
 }
 
-export interface IQuery {
-    findAll(sortBy?: Nullable<string>, sortOrder?: Nullable<string>, search?: Nullable<string>, filterAge?: Nullable<number>, filterSpecies?: Nullable<string>, skip?: Nullable<number>, take?: Nullable<number>): Nullable<Nullable<Pet>[]> | Promise<Nullable<Nullable<Pet>[]>>;
+export abstract class IQuery {
+    abstract findAll(sortBy?: Nullable<string>, sortOrder?: Nullable<string>, search?: Nullable<string>, filterAge?: Nullable<number>, filterSpecies?: Nullable<string>, skip?: Nullable<number>, take?: Nullable<number>): Nullable<Nullable<PetInput>[]> | Promise<Nullable<Nullable<PetInput>[]>>;
 }
 
-export interface Pet {
+export class PetInput {
     id: string;
     age?: Nullable<number>;
     name?: Nullable<string>;
