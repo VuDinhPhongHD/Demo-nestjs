@@ -5,16 +5,18 @@ import { CreatePetInput } from './dto/create-pet.input';
 
 @Resolver(() => Pet)
 export class PetsResolver {
-  constructor(private readonly petsService: PetsService) {}
+  constructor(private readonly petsService: PetsService) { }
 
   @Mutation(() => Pet)
   async createPet(@Args('createPetInput') createPetInput: CreatePetInput): Promise<Pet> {
     return this.petsService.create(createPetInput);
   }
 
-  @Query(() => Pet, { name: 'findPetBySpecies' })
-  async findOneByName(@Args('species') species: string): Promise<Pet> {
-    return this.petsService.findOneByName(species);
+  @Query(() => [Pet], { name: 'findPetBySpecies' })
+  async findOneBySpecies(@Args('species') species: string): Promise<Pet[]> {
+    const test = await this.petsService.findOneBySpecies(species);
+    console.log(test)
+    return test
   }
 
   @Query(() => [Pet], { name: 'pets' })

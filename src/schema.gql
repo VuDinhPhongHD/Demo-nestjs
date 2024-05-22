@@ -16,7 +16,7 @@ type Pet {
 }
 
 type Query {
-  findPetBySpecies(species: String!): Pet!
+  findPetBySpecies(species: String!): [Pet!]!
   pets: [Pet!]!
 }
 
