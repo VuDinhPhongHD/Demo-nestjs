@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
 import { CreatePetDto } from './dto/create-pet.input';
+import { CreatePetInput } from 'src/graphql';
 
 @Injectable()
 export class PetsService {
@@ -11,38 +12,12 @@ export class PetsService {
     private petsRepository: Repository<Pet>,
   ) { }
 
-  async create(createPetInput: CreatePetDto): Promise<Pet> {
-    const pet = new Pet();
-    pet.name = createPetInput.name;
-    pet.age = createPetInput.age;
-    pet.species = createPetInput.species;
+  async createPet(createPetInput: CreatePetInput): Promise<Pet> {
+    const pet = this.petsRepository.create(createPetInput);
     return this.petsRepository.save(pet);
   }
 
-  // async findOneBySpecies(species: string): Promise<Pet[]> {
-  //   const pets = await this.petsRepository.find({
-  //     where: { species: Like(`%${species}%`) }
-  //   });
-  //   return pets;
-  // }
 
-  // async filterPetsByAgeAndSpecies(age: number, species: string): Promise<Pet[]> {
-  //   const filter: any = { age, species };
-  //   if (age) {
-  //     filter.age = age;
-  //   }
-  //   if (species) {
-  //     filter.species = species;
-  //   }
-  //   const queryBuilder = this.petsRepository.createQueryBuilder('pet');
-  //   if (filter.age) {
-  //     queryBuilder.andWhere('pet.age = :age', { age: filter.age });
-  //   }
-  //   if (filter.species) {
-  //     queryBuilder.andWhere('pet.species = :species', { species: filter.species });
-  //   }
-  //   return queryBuilder.getMany();
-  // }
   async findAll(
     sortBy?: string,
     sortOrder?: 'ASC' | 'DESC',

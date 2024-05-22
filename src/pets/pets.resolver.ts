@@ -9,7 +9,7 @@ export class PetsResolver {
 
   @Mutation('createPet')
   async createPet(@Args('input') createPetInput: CreatePetDto): Promise<Pet> {
-    return this.petsService.create(createPetInput);
+    return this.petsService.createPet(createPetInput);
   }
 
   @Query('findAll')
