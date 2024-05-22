@@ -14,9 +14,8 @@ export class PetsResolver {
 
   @Query(() => [Pet], { name: 'findPetBySpecies' })
   async findOneBySpecies(@Args('species') species: string): Promise<Pet[]> {
-    const test = await this.petsService.findOneBySpecies(species);
-    console.log(test)
-    return test
+    const pets = await this.petsService.findOneBySpecies(species);
+    return pets
   }
 
   @Query(() => [Pet], { name: 'pets' })

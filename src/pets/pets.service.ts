@@ -23,7 +23,6 @@ export class PetsService {
     const pets = await this.petsRepository.find({ 
       where: { species: Like(`%${species}%`) }
     });
-    console.log(pets)
     return pets;
   }
 
