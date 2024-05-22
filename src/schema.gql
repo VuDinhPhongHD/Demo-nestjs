@@ -17,6 +17,7 @@ type Pet {
 
 type Query {
   findPetBySpecies(species: String!): [Pet!]!
+  filterPets(age: Float, species: String): [Pet!]!
   pets: [Pet!]!
 }
 
