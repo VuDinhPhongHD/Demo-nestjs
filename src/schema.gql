@@ -16,9 +16,7 @@ type Pet {
 }
 
 type Query {
-  findPetBySpecies(species: String!): [Pet!]!
-  filterPets(age: Float, species: String): [Pet!]!
-  pets: [Pet!]!
+  pets(sortBy: String, sortOrder: String, search: String, filterAge: Float, filterSpecies: String, skip: Float, take: Float): [Pet!]!
 }
 
 type Mutation {
