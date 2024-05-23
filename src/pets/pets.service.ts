@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
-import { CreatePetDto } from './dto/create-pet.input';
-import { CreatePetInput } from 'src/graphql';
+import { CreatePetInput, FindPetInput, PetOutput } from 'src/graphql';
 
 @Injectable()
 export class PetsService {
@@ -12,47 +11,61 @@ export class PetsService {
     private petsRepository: Repository<Pet>,
   ) { }
 
-  async createPet(createPetInput: CreatePetInput): Promise<Pet> {
-    const pet = this.petsRepository.create(createPetInput);
-    return this.petsRepository.save(pet);
+  async createPet(createPetInput: CreatePetInput) {
+    try {
+      const pet = this.petsRepository.create(createPetInput);
+      const result = await this.petsRepository.save(pet);
+      if (result) {
+        return result;
+      } else {
+        throw new Error('Failed to create pet.');
+      }
+    } catch (error) {
+      console.error('Error while creating pet:', error);
+      throw new Error('Failed to create pet.');
+    }
   }
 
 
-  async findAll(
-    sortBy?: string,
-    sortOrder?: 'ASC' | 'DESC',
-    search?: string,
-    filterAge?: number,
-    filterSpecies?: string,
-    skip?: number,
-    take?: number,
-  ): Promise<Pet[]> {
-    let options: FindManyOptions<Pet> = {};
 
-    if (sortBy && sortOrder) {
-      options.order = { [sortBy]: sortOrder };
-    }
+  async findAll(findPetInput: FindPetInput): Promise<PetOutput[]> {
+    try {
+      let options: FindManyOptions<Pet> = {};
 
-    if (search) {
-      options.where = { name: Like(`%${search}%`) };
-    }
+      if (findPetInput?.sortBy && findPetInput?.sortOrder) {
+        options.order = { [findPetInput.sortBy]: findPetInput.sortOrder };
+      }
 
-    if (filterAge) {
-      options.where = { ...options.where, age: filterAge };
-    }
+      if (findPetInput?.search) {
+        options.where = { name: Like(`%${findPetInput.search}%`) };
+      }
 
-    if (filterSpecies) {
-      options.where = { ...options.where, species: Like(`%${filterSpecies}%`) };
-    }
-    if (skip) {
-      options.skip = skip;
-    }
+      if (findPetInput?.filterAge) {
+        options.where = { ...options.where, age: findPetInput.filterAge };
+      }
 
-    if (take) {
-      options.take = take;
+      if (findPetInput?.filterSpecies) {
+        options.where = { ...options.where, species: Like(`%${findPetInput.filterSpecies}%`) };
+      }
+      if (findPetInput?.skip) {
+        options.skip = findPetInput.skip;
+      }
+
+      if (findPetInput?.take) {
+        options.take = findPetInput.take;
+      }
+
+      const pets = await this.petsRepository.find(options);
+      if(pets.length == 0){
+        throw new Error('Failed to find pets.');
+      }
+      return pets;
+    } catch (error) {
+      console.error('Error while finding pets:', error); // Ghi log lỗi
+      throw new Error('Failed to find pets.'); // Ném lại ngoại lệ
     }
-    return this.petsRepository.find(options);
   }
+
 
 
 }

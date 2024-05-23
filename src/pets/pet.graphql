@@ -1,20 +1,12 @@
 type Mutation{
-    createPet(input: CreatePetInput): PetInput
+    createPet(input: CreatePetInput): PetOutput
 }
 
 type Query {
-  findAll(
-    sortBy: String
-    sortOrder: String
-    search: String
-    filterAge: Int
-    filterSpecies: String
-    skip: Int
-    take: Int
-  ): [PetInput]
-}
+  findAll(input: FindPetInput): [PetOutput]
+}  
 
-type PetInput{
+type PetOutput{
     id: ID!
     age: Int
     name: String
@@ -25,4 +17,14 @@ input CreatePetInput {
   name: String
   age: Int
   species: String
+}
+
+input FindPetInput{
+  sortBy: String
+  sortOrder: String
+  search: String
+  filterAge: Int
+  filterSpecies: String
+  skip: Int
+  take: Int  
 }

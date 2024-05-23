@@ -14,15 +14,25 @@ export class CreatePetInput {
     species?: Nullable<string>;
 }
 
+export class FindPetInput {
+    sortBy?: Nullable<string>;
+    sortOrder?: Nullable<string>;
+    search?: Nullable<string>;
+    filterAge?: Nullable<number>;
+    filterSpecies?: Nullable<string>;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+}
+
 export abstract class IMutation {
-    abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetInput> | Promise<Nullable<PetInput>>;
+    abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
 }
 
 export abstract class IQuery {
-    abstract findAll(sortBy?: Nullable<string>, sortOrder?: Nullable<string>, search?: Nullable<string>, filterAge?: Nullable<number>, filterSpecies?: Nullable<string>, skip?: Nullable<number>, take?: Nullable<number>): Nullable<Nullable<PetInput>[]> | Promise<Nullable<Nullable<PetInput>[]>>;
+    abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
 }
 
-export class PetInput {
+export class PetOutput {
     id: string;
     age?: Nullable<number>;
     name?: Nullable<string>;
