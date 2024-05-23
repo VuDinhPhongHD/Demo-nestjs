@@ -61,8 +61,8 @@ export class PetsService {
       }
       return pets;
     } catch (error) {
-      console.error('Error while finding pets:', error); // Ghi log lỗi
-      throw new Error('Failed to find pets.'); // Ném lại ngoại lệ
+      console.error('Error while finding pets:', error);
+      throw new Error('Failed to find pets.');
     }
   }
 
