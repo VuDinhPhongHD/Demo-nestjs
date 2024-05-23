@@ -1,3 +1,4 @@
+import { UserModule } from './users/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,9 +9,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PetsModule } from './pets/pets.module';
 import { Pet } from './pets/entities/pet.entity';
+import { dataSourceOption } from 'db/data-source';
 
 @Module({
   imports: [
+        UserModule, 
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -22,21 +25,7 @@ import { Pet } from './pets/entities/pet.entity';
         outputAs: 'class', // or 'interface',
       },
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        entities: [Pet],
-        synchronize: true,
-        logging: true,
-      }),
-      inject: [ConfigService],
-    }),
+    TypeOrmModule.forRoot(dataSourceOption),
     PetsModule,
   ],
   controllers: [AppController],

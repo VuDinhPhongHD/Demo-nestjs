@@ -39,4 +39,10 @@ export class PetOutput {
     species?: Nullable<string>;
 }
 
+export class UserOutput {
+    id: string;
+    age?: Nullable<number>;
+    name?: Nullable<string>;
+}
+
 type Nullable<T> = T | null;

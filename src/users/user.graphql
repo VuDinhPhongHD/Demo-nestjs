@@ -1,0 +1,10 @@
+type UserOutput{
+    id: ID!
+    age: Int
+    name: String
+}
+
+input CreatePetInput {
+  name: String
+  age: Int
+}
