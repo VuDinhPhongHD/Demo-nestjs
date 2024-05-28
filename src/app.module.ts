@@ -1,3 +1,4 @@
+import { UsersService } from './users/users.service';
 import { UserModule } from './users/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,7 +14,7 @@ import { dataSourceOption } from 'db/data-source';
 
 @Module({
   imports: [
-        UserModule, 
+    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -26,9 +27,9 @@ import { dataSourceOption } from 'db/data-source';
       },
     }),
     TypeOrmModule.forRoot(dataSourceOption),
-    PetsModule,
+    PetsModule, UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

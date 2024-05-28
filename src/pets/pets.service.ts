@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
 import { CreatePetInput, FindPetInput, PetOutput } from 'src/graphql';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class PetsService {
   constructor(
     @InjectRepository(Pet)
     private petsRepository: Repository<Pet>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) { }
 
   async createPet(createPetInput: CreatePetInput) {
@@ -26,7 +29,28 @@ export class PetsService {
     }
   }
 
+  async queryPetById(id: string){
+    const pet = await this.petsRepository.findOne({ where: { id } });
+    if (!pet) {
+      throw new Error("Pet doesn't exits.");
+    } else {
+      const owner = await this.usersRepository.findOne({ where: { id: pet.userId } })
+      const data = {
+        id: pet.id,
+        name: pet.name,
+        age: pet.age,
+        species: pet.species,
+        user: {
+          id: owner.id,
+          name: owner.name,
+          age: owner.age, 
+          email: owner.email,
+        }
+      };
+      return data;
+    }
 
+  }
 
   async findAll(findPetInput: FindPetInput): Promise<PetOutput[]> {
     try {
@@ -56,7 +80,7 @@ export class PetsService {
       }
 
       const pets = await this.petsRepository.find(options);
-      if(pets.length == 0){
+      if (pets.length == 0) {
         throw new Error('Failed to find pets.');
       }
       return pets;
