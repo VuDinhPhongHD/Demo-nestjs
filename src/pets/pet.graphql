@@ -4,6 +4,7 @@ type Mutation{
 
 type Query {
   findAll(input: FindPetInput): [PetOutput]
+  queryPetById(petId: String): PetOutputWithUser
 }  
 
 type PetOutput{
@@ -11,12 +12,22 @@ type PetOutput{
     age: Int
     name: String
     species: String
+    userId: ID
+}
+
+type PetOutputWithUser{
+    id: ID!
+    age: Int
+    name: String
+    species: String
+    user: UserOutput
 }
 
 input CreatePetInput {
   name: String
   age: Int
   species: String
+  userId: ID
 }
 
 input FindPetInput{

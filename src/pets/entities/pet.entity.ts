@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { PetOutput } from 'src/graphql';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { User } from 'src/users/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -21,4 +22,11 @@ export class Pet implements PetOutput {
   @Field(() => String, { description: 'Loài của thú cưng' })
   @Column()
   species: string;
+
+  @Column()
+  userId: string;
+
+  @ManyToOne(() => User, user => user.pets)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

@@ -1,10 +1,16 @@
+type Mutation{
+    createUser(input: CreateUserInput): UserOutput
+}
+
 type UserOutput{
     id: ID!
     age: Int
     name: String
+    email: String
 }
 
-input CreatePetInput {
+input CreateUserInput {
   name: String
   age: Int
+  email: String
 }

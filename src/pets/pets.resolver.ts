@@ -14,8 +14,12 @@ export class PetsResolver {
   }
 
   @Query('findAll')
-  async findAll(@Args('input') input: FindPetInput){
+  async findAll(@Args('input') input: FindPetInput) {
     return this.petsService.findAll(input);
   }
+
+  @Query('queryPetById')
+  async queryPetById(@Args('petId') petId: string) {
+    return this.petsService.queryPetById(petId);
+  }
 }
- 
