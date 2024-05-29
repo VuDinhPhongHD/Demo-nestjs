@@ -30,23 +30,10 @@ export class PetsService {
   }
 
   async queryPetById(id: string) {
-    const pet = await this.petsRepository.findOne({ where: { id } });
-    if (!pet) throw new Error("Pet doesn't exits.");
-
-    const owner = await this.usersRepository.findOne({ where: { id: pet.userId } })
-    const data = {
-      id: pet.id,
-      name: pet.name,
-      age: pet.age,
-      species: pet.species,
-      user: {
-        id: owner.id,
-        name: owner.name,
-        age: owner.age,
-        email: owner.email,
-      }
-    };
-    return data;
+    const pet = await this.petsRepository.findOne({ where: { id }, relations: ['user'] });
+    //(relations: ['user'] ) TypeORM được thông báo rằng muốn lấy thông tin về người dùng kèm theo thông tin của thú cưng
+    if (!pet) throw new Error("Pet doesn't exist.");
+    return pet;
   }
 
   async findAll(findPetInput: FindPetInput): Promise<PetOutput[]> {
@@ -104,7 +91,6 @@ export class PetsService {
       const pet = await this.petsRepository.findOne({ where: { id: petId } });
       if (!pet) throw new NotFoundException('Pet not found');
       pet.deletedAt = new Date().toISOString();
-      pet.isDeleted = true;
       return await this.petsRepository.save(pet);
     } catch (error) {
       throw new Error(`Failed to soft delete pet: ${error.message}`);

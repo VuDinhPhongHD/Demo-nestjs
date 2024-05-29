@@ -41,7 +41,6 @@ export class UsersService {
             const user = await this.usersRepository.findOne({ where: { id: userId } });
             if (!user) throw new NotFoundException('User not found');
             user.deletedAt = new Date().toISOString();
-            user.isDeleted = true;
             return await this.usersRepository.save(user);
         } catch (error) {
             throw new Error(`Failed to soft delete user: ${error.message}`);

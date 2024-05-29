@@ -33,8 +33,4 @@ export class Pet implements PetOutput {
   @Field(() => String, { nullable: true, description: 'Thời điểm thú cưng bị xóa mềm' })
   @Column({ type: 'timestamp', nullable: true })
   deletedAt?: string;
-
-  @Field(() => Boolean, { description: 'Trạng thái xóa mềm của thú cưng', defaultValue: false })
-  @Column({ type: 'boolean', default: false })
-  isDeleted: boolean;
 }

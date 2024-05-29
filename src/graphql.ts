@@ -76,8 +76,8 @@ export class PetOutput {
     name?: Nullable<string>;
     species?: Nullable<string>;
     userId?: Nullable<string>;
+    user?: Nullable<UserOutput>;
     deletedAt?: Nullable<string>;
-    isDeleted?: Nullable<boolean>;
 }
 
 export class PetOutputWithUser {
@@ -87,7 +87,6 @@ export class PetOutputWithUser {
     species?: Nullable<string>;
     user?: Nullable<UserOutput>;
     deletedAt?: Nullable<string>;
-    isDeleted?: Nullable<boolean>;
 }
 
 export class UserOutput {
@@ -96,7 +95,6 @@ export class UserOutput {
     name?: Nullable<string>;
     email?: Nullable<string>;
     deletedAt?: Nullable<string>;
-    isDeleted?: Nullable<boolean>;
 }
 
 type Nullable<T> = T | null;

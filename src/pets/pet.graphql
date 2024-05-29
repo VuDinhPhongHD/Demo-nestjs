@@ -16,8 +16,8 @@ type PetOutput{
     name: String
     species: String
     userId: ID
+    user: UserOutput
     deletedAt: String
-    isDeleted: Boolean
 }
 
 type PetOutputWithUser{
@@ -27,7 +27,6 @@ type PetOutputWithUser{
     species: String
     user: UserOutput
     deletedAt: String
-    isDeleted: Boolean
 }
 
 input CreatePetInput {
