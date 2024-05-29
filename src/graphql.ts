@@ -15,6 +15,14 @@ export class CreatePetInput {
     userId?: Nullable<string>;
 }
 
+export class UpdatePetInput {
+    id: string;
+    name?: Nullable<string>;
+    age?: Nullable<number>;
+    species?: Nullable<string>;
+    userId?: Nullable<string>;
+}
+
 export class FindPetInput {
     sortBy?: Nullable<string>;
     sortOrder?: Nullable<string>;
@@ -31,10 +39,29 @@ export class CreateUserInput {
     email?: Nullable<string>;
 }
 
+export class UpdateUserInput {
+    id: string;
+    name?: Nullable<string>;
+    age?: Nullable<number>;
+    email?: Nullable<string>;
+}
+
 export abstract class IMutation {
     abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
 
+    abstract updatePet(input?: Nullable<UpdatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
+    abstract deletePet(petId?: Nullable<string>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
+    abstract destroyPet(petId?: Nullable<string>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
     abstract createUser(input?: Nullable<CreateUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract updateUser(input?: Nullable<UpdateUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract deleteUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract destroyUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
 }
 
 export abstract class IQuery {
@@ -49,6 +76,8 @@ export class PetOutput {
     name?: Nullable<string>;
     species?: Nullable<string>;
     userId?: Nullable<string>;
+    deletedAt?: Nullable<string>;
+    isDeleted?: Nullable<boolean>;
 }
 
 export class PetOutputWithUser {
@@ -57,6 +86,8 @@ export class PetOutputWithUser {
     name?: Nullable<string>;
     species?: Nullable<string>;
     user?: Nullable<UserOutput>;
+    deletedAt?: Nullable<string>;
+    isDeleted?: Nullable<boolean>;
 }
 
 export class UserOutput {
@@ -64,6 +95,8 @@ export class UserOutput {
     age?: Nullable<number>;
     name?: Nullable<string>;
     email?: Nullable<string>;
+    deletedAt?: Nullable<string>;
+    isDeleted?: Nullable<boolean>;
 }
 
 type Nullable<T> = T | null;

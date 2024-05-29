@@ -14,7 +14,6 @@ import { dataSourceOption } from 'db/data-source';
 
 @Module({
   imports: [
-    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

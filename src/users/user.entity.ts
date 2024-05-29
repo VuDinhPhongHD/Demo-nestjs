@@ -25,4 +25,12 @@ export class User implements UserOutput {
 
   @OneToMany(() => Pet, (pet) => pet.user)
   pets: Pet[];
+
+  @Field(() => String, { nullable: true, description: 'Thời điểm người dùng bị xóa mềm' })
+  @Column({ type: 'timestamp', nullable: true })
+  deletedAt?: string;
+
+  @Field(() => Boolean, { description: 'Trạng thái xóa mềm của người dùng', defaultValue: false })
+  @Column({ type: 'boolean', default: false })
+  isDeleted: boolean;
 }
