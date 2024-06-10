@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserInput, UpdateUserInput } from 'src/graphql';
+import { CreateUserInput, UpdateUserInput, UserOutput } from 'src/graphql';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +14,7 @@ export class UsersService {
 
     async createUser(createUserInput: CreateUserInput) {
         try {
+            console.log("createUserInput", createUserInput)
             const user = this.usersRepository.create(createUserInput);
             const result = await this.usersRepository.save(user);
             return result;
@@ -55,6 +56,15 @@ export class UsersService {
             return user;
         } catch (error) {
             throw new Error(`Failed to hard delete user: ${error.message}`);
+        }
+    }
+
+    async findOne(email: string) {
+        try {
+            const user = await this.usersRepository.findOne({ where: { email: email } });
+            return user;
+        } catch (error) {
+            throw new Error(`Failed to hard find user: ${error.message}`);
         }
     }
 }

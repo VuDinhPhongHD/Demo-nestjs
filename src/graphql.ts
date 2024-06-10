@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class SignInUserInput {
+    email: string;
+    password: string;
+}
+
 export class CreatePetInput {
     name?: Nullable<string>;
     age?: Nullable<number>;
@@ -37,6 +42,7 @@ export class CreateUserInput {
     name?: Nullable<string>;
     age?: Nullable<number>;
     email?: Nullable<string>;
+    password?: Nullable<string>;
 }
 
 export class UpdateUserInput {
@@ -44,6 +50,14 @@ export class UpdateUserInput {
     name?: Nullable<string>;
     age?: Nullable<number>;
     email?: Nullable<string>;
+}
+
+export abstract class IQuery {
+    abstract SignIn(input?: Nullable<SignInUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
+
+    abstract queryPetById(petId?: Nullable<string>): Nullable<PetOutputWithUser> | Promise<Nullable<PetOutputWithUser>>;
 }
 
 export abstract class IMutation {
@@ -62,12 +76,6 @@ export abstract class IMutation {
     abstract deleteUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
 
     abstract destroyUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
-}
-
-export abstract class IQuery {
-    abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
-
-    abstract queryPetById(petId?: Nullable<string>): Nullable<PetOutputWithUser> | Promise<Nullable<PetOutputWithUser>>;
 }
 
 export class PetOutput {
@@ -94,7 +102,6 @@ export class UserOutput {
     age?: Nullable<number>;
     name?: Nullable<string>;
     email?: Nullable<string>;
-    deletedAt?: Nullable<string>;
 }
 
 type Nullable<T> = T | null;

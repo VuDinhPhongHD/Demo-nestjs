@@ -10,13 +10,13 @@ type UserOutput{
     age: Int
     name: String
     email: String
-    deletedAt: String
 }
 
 input CreateUserInput {
   name: String
   age: Int
   email: String
+  password: String
 }
 input UpdateUserInput {
   id: ID!

@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { PetsModule } from './pets/pets.module';
 import { Pet } from './pets/entities/pet.entity';
 import { dataSourceOption } from 'db/data-source';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { dataSourceOption } from 'db/data-source';
       },
     }),
     TypeOrmModule.forRoot(dataSourceOption),
-    PetsModule, UserModule
+    PetsModule, UserModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

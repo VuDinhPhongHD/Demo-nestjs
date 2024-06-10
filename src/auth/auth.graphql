@@ -1,0 +1,7 @@
+type Query {
+  SignIn(input: SignInUserInput): UserOutput
+}  
+input SignInUserInput{
+  email: String!
+  password: String!
+}
