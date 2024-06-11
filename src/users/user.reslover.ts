@@ -1,8 +1,7 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateUserInput, FindPetInput, PetOutput, UpdateUserInput, UserOutput } from 'src/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { CreateUserInput, UpdateUserInput } from 'src/graphql';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
-// import { CreatePetDto } from './dto/create-pet.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -19,11 +18,11 @@ export class UsersResolver {
     }
 
     @Mutation('deleteUser')
-    async deleteUser(@Args('petId') petId: string) {
-        return this.usersService.deletePet(petId);
+    async deleteUser(@Args('userId') userId: string) {
+        return this.usersService.deleteUser(userId);
     }
     @Mutation('destroyUser')
-    async destroyPet(@Args('userId') petId: string) {
-        return this.usersService.destroyUser(petId);
+    async destroyUser(@Args('userId') userId: string) {
+        return this.usersService.destroyUser(userId);
     }
 }

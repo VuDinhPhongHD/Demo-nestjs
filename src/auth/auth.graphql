@@ -1,7 +1,16 @@
-type Query {
-  SignIn(input: SignInUserInput): UserOutput
-}  
-input SignInUserInput{
-  email: String!
-  password: String!
+type LoginResponse{
+    id: ID!
+    age: Int
+    name: String
+    email: String
+    access_token: String
+}
+
+input LoginUserInput {
+  email: String
+  password: String
+}
+
+type Mutation {
+  login(loginUserInput: LoginUserInput!): LoginResponse
 }
