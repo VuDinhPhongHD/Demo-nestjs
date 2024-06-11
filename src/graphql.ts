@@ -8,7 +8,20 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class SignInUserInput {
+    email: string;
+    password: string;
+}
+
 export class CreatePetInput {
+    name?: Nullable<string>;
+    age?: Nullable<number>;
+    species?: Nullable<string>;
+    userId?: Nullable<string>;
+}
+
+export class UpdatePetInput {
+    id: string;
     name?: Nullable<string>;
     age?: Nullable<number>;
     species?: Nullable<string>;
@@ -29,18 +42,40 @@ export class CreateUserInput {
     name?: Nullable<string>;
     age?: Nullable<number>;
     email?: Nullable<string>;
+    password?: Nullable<string>;
+}
+
+export class UpdateUserInput {
+    id: string;
+    name?: Nullable<string>;
+    age?: Nullable<number>;
+    email?: Nullable<string>;
+}
+
+export abstract class IQuery {
+    abstract SignIn(input?: Nullable<SignInUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
+
+    abstract queryPetById(petId?: Nullable<string>): Nullable<PetOutputWithUser> | Promise<Nullable<PetOutputWithUser>>;
 }
 
 export abstract class IMutation {
     abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
 
+    abstract updatePet(input?: Nullable<UpdatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
+    abstract deletePet(petId?: Nullable<string>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
+    abstract destroyPet(petId?: Nullable<string>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
+
     abstract createUser(input?: Nullable<CreateUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
-}
 
-export abstract class IQuery {
-    abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
+    abstract updateUser(input?: Nullable<UpdateUserInput>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
 
-    abstract queryPetById(petId?: Nullable<string>): Nullable<PetOutputWithUser> | Promise<Nullable<PetOutputWithUser>>;
+    abstract deleteUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
+
+    abstract destroyUser(userId?: Nullable<string>): Nullable<UserOutput> | Promise<Nullable<UserOutput>>;
 }
 
 export class PetOutput {
@@ -49,6 +84,8 @@ export class PetOutput {
     name?: Nullable<string>;
     species?: Nullable<string>;
     userId?: Nullable<string>;
+    user?: Nullable<UserOutput>;
+    deletedAt?: Nullable<string>;
 }
 
 export class PetOutputWithUser {
@@ -57,6 +94,7 @@ export class PetOutputWithUser {
     name?: Nullable<string>;
     species?: Nullable<string>;
     user?: Nullable<UserOutput>;
+    deletedAt?: Nullable<string>;
 }
 
 export class UserOutput {

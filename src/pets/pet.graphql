@@ -1,5 +1,8 @@
 type Mutation{
     createPet(input: CreatePetInput): PetOutput
+    updatePet(input: UpdatePetInput): PetOutput
+    deletePet(petId: String): PetOutput
+    destroyPet(petId: String): PetOutput
 }
 
 type Query {
@@ -13,6 +16,8 @@ type PetOutput{
     name: String
     species: String
     userId: ID
+    user: UserOutput
+    deletedAt: String
 }
 
 type PetOutputWithUser{
@@ -21,9 +26,18 @@ type PetOutputWithUser{
     name: String
     species: String
     user: UserOutput
+    deletedAt: String
 }
 
 input CreatePetInput {
+  name: String
+  age: Int
+  species: String
+  userId: ID
+}
+
+input UpdatePetInput {
+  id: ID!
   name: String
   age: Int
   species: String

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
-import { CreatePetInput, FindPetInput, PetOutput } from 'src/graphql';
+import { CreatePetInput, FindPetInput, PetOutput, UpdatePetInput } from 'src/graphql';
 import { User } from 'src/users/user.entity';
 
 @Injectable()
@@ -29,27 +29,11 @@ export class PetsService {
     }
   }
 
-  async queryPetById(id: string){
-    const pet = await this.petsRepository.findOne({ where: { id } });
-    if (!pet) {
-      throw new Error("Pet doesn't exits.");
-    } else {
-      const owner = await this.usersRepository.findOne({ where: { id: pet.userId } })
-      const data = {
-        id: pet.id,
-        name: pet.name,
-        age: pet.age,
-        species: pet.species,
-        user: {
-          id: owner.id,
-          name: owner.name,
-          age: owner.age, 
-          email: owner.email,
-        }
-      };
-      return data;
-    }
-
+  async queryPetById(id: string) {
+    const pet = await this.petsRepository.findOne({ where: { id }, relations: ['user'] });
+    //(relations: ['user'] ) TypeORM được thông báo rằng muốn lấy thông tin về người dùng kèm theo thông tin của thú cưng
+    if (!pet) throw new Error("Pet doesn't exist.");
+    return pet;
   }
 
   async findAll(findPetInput: FindPetInput): Promise<PetOutput[]> {
@@ -90,6 +74,40 @@ export class PetsService {
     }
   }
 
+  async updatePet(updatePetInput: UpdatePetInput) {
+    try {
+      const pet = await this.petsRepository.findOne({ where: { id: updatePetInput.id } });
+      if (!pet) throw new Error("Pet doesn't exits.");
+      Object.assign(pet, updatePetInput);
+      const updatedPet = await this.petsRepository.save(pet);
+      return updatedPet;
+    } catch (error) {
+      throw new Error(`Failed to update pet: ${error.message}`);
+    }
+  }
 
+  async deletePet(petId: string) {
+    try {
+      const pet = await this.petsRepository.findOne({ where: { id: petId } });
+      if (!pet) throw new NotFoundException('Pet not found');
+      pet.deletedAt = new Date().toISOString();
+      return await this.petsRepository.save(pet);
+    } catch (error) {
+      throw new Error(`Failed to soft delete pet: ${error.message}`);
+    }
+  }
+
+  async destroyPet(petId: string) {
+    try {
+      const pet = await this.petsRepository.findOne({ where: { id: petId } });
+      if (!pet) {
+        throw new NotFoundException('Pet not found');
+      }
+      await this.petsRepository.delete(petId);
+      return pet;
+    } catch (error) {
+      throw new Error(`Failed to hard delete pet: ${error.message}`);
+    }
+  }
 
 }

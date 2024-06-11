@@ -29,4 +29,8 @@ export class Pet implements PetOutput {
   @ManyToOne(() => User, user => user.pets)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Field(() => String, { nullable: true, description: 'Thời điểm thú cưng bị xóa mềm' })
+  @Column({ type: 'timestamp', nullable: true })
+  deletedAt?: string;
 }

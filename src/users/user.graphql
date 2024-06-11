@@ -1,5 +1,8 @@
 type Mutation{
     createUser(input: CreateUserInput): UserOutput
+    updateUser(input: UpdateUserInput): UserOutput
+    deleteUser(userId: String): UserOutput
+    destroyUser(userId: String): UserOutput
 }
 
 type UserOutput{
@@ -10,6 +13,13 @@ type UserOutput{
 }
 
 input CreateUserInput {
+  name: String
+  age: Int
+  email: String
+  password: String
+}
+input UpdateUserInput {
+  id: ID!
   name: String
   age: Int
   email: String
