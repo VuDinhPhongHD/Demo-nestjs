@@ -11,16 +11,12 @@ export class AuthResolver {
 
     @Mutation(() => LoginResponse)
     @UseGuards(GqlAuthGuard)
-    async login(@Context() context, @Context() { res }: { res: Response }, @Context() { req }: { req: Request }) {
-        const refreshToken = req.cookies['refresh_token'];
-        console.log("refres", refreshToken)
-        return this.authService.login(context.user, res);
+    async login(@Context() context) {
+        return this.authService.login(context.user);
     }
 
     @Mutation(() => LoginResponse)
-    async refresherToken(@Context() { res }: { res: Response }, @Context() { req }: { req: Request }) {
-        const refreshToken = req.cookies['refresh_token'];
-        console.log("refres", refreshToken)
-        return this.authService.processNewToken(refreshToken, res);
+    async refresherToken(@Args('refresh_token') refresh_token: string) {
+        return this.authService.processNewToken(refresh_token);
     }
 }

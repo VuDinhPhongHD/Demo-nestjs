@@ -60,7 +60,7 @@ export class LoginResponse {
 export abstract class IMutation {
     abstract login(loginUserInput: LoginUserInput): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
 
-    abstract refresherToken(): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
+    abstract refresherToken(refresh_token: string): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
 
     abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
 

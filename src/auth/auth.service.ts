@@ -33,8 +33,9 @@ export class AuthService {
         });
         return refresh_token;
     }
-    async login(user: any, response: Response) {
-        const { id, name, email, age } = user;
+    async login(user: any) {
+        const { id, name, email } = user;
+        console.log("user", user);
         const payload = {
             sub: 'token login',
             iss: 'from server',
@@ -45,27 +46,17 @@ export class AuthService {
 
         const refresh_token = this.createRefreshToken(payload);
         await this.usersService.updateUserRefreshToken(refresh_token, user.id);
-        // Thiết lập cookie
-        response.cookie('refresh_token', refresh_token, {
-            httpOnly: true,
-            maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
-        });
-
         return {
-            id,
-            age,
-            name,
-            email,
             access_token: this.jwtService.sign(payload),
             refresh_token: refresh_token
         };
     }
-    async processNewToken(refreshToken: string, response: Response) {
+    async processNewToken(refresh_token: string) {
         try {
-            this.jwtService.verify(refreshToken, {
+            this.jwtService.verify(refresh_token, {
                 secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
             });
-            const user = await this.usersService.findOneByRefreshToken(refreshToken);
+            const user = await this.usersService.findOneByRefreshToken(refresh_token);
             if (user) {
                 const { id, name, email } = user;
                 const payload = {
@@ -77,11 +68,6 @@ export class AuthService {
                 };
                 const refresh_token = this.createRefreshToken(payload);
                 await this.usersService.updateUserRefreshToken(refresh_token, user.id);
-                response.clearCookie('refresh_token');
-                response.cookie('refresh_token', refresh_token, {
-                    httpOnly: true,
-                    maxAge: ms(this.configService.get<string>("JWT_REFRESH_EXPIRE")),
-                });
                 return {
                     access_token: this.jwtService.sign(payload),
                     refresh_token: refresh_token,

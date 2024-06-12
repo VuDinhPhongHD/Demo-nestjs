@@ -10,5 +10,5 @@ input LoginUserInput {
 
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginResponse
-  refresherToken: LoginResponse
+  refresherToken(refresh_token: String!): LoginResponse
 }
