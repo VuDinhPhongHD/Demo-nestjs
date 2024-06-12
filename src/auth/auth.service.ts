@@ -1,13 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { access } from 'fs';
 import { LoginUserInput } from 'src/graphql';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt'
+import { ConfigService } from '@nestjs/config';
+import ms from 'ms';
+import { Response } from 'express'; // Thêm import này
+
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: UsersService,
+        private configService: ConfigService,
         private jwtService: JwtService
     ) { }
 
@@ -21,15 +26,72 @@ export class AuthService {
         return null;
     }
 
+    createRefreshToken = (payload: any) => {
+        const refresh_token = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            expiresIn: ms(this.configService.get<string>("JWT_REFRESH_EXPIRE")) / 1000,
+        });
+        return refresh_token;
+    }
+    async login(user: any, response: Response) {
+        const { id, name, email, age } = user;
+        const payload = {
+            sub: 'token login',
+            iss: 'from server',
+            id,
+            name,
+            email,
+        };
 
-    async login(user: User) {
-        const payload = { username: user.name, sub: user.id };
+        const refresh_token = this.createRefreshToken(payload);
+        await this.usersService.updateUserRefreshToken(refresh_token, user.id);
+        // Thiết lập cookie
+        response.cookie('refresh_token', refresh_token, {
+            httpOnly: true,
+            maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
+        });
+
         return {
-            id: user.id,
-            age: user.age,
-            name: user.name,
-            email: user.email,
-            access_token: this.jwtService.sign(payload)
+            id,
+            age,
+            name,
+            email,
+            access_token: this.jwtService.sign(payload),
+            refresh_token: refresh_token
         };
     }
+    async processNewToken(refreshToken: string, response: Response) {
+        try {
+            this.jwtService.verify(refreshToken, {
+                secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            });
+            const user = await this.usersService.findOneByRefreshToken(refreshToken);
+            if (user) {
+                const { id, name, email } = user;
+                const payload = {
+                    sub: "token login",
+                    iss: "from server",
+                    id,
+                    name,
+                    email,
+                };
+                const refresh_token = this.createRefreshToken(payload);
+                await this.usersService.updateUserRefreshToken(refresh_token, user.id);
+                response.clearCookie('refresh_token');
+                response.cookie('refresh_token', refresh_token, {
+                    httpOnly: true,
+                    maxAge: ms(this.configService.get<string>("JWT_REFRESH_EXPIRE")),
+                });
+                return {
+                    access_token: this.jwtService.sign(payload),
+                    refresh_token: refresh_token,
+                };
+            } else {
+                throw new BadRequestException("Invalid token! Please log in again.");
+            }
+        } catch (error) {
+            throw new BadRequestException("Invalid token! Please log in again.");
+        }
+    }
+
 }

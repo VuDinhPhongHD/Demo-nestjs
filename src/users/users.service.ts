@@ -67,7 +67,14 @@ export class UsersService {
             throw new Error(`Failed to hard delete user: ${error.message}`);
         }
     }
+    async updateUserRefreshToken(refresh_token: string, id: string) {
+        try {
+            return await this.usersRepository.update(id, { refresh_token });
+        } catch (error) {
+            throw new Error(`Failed to update refresh_token user: ${error.message}`);
+        }
 
+    }
     async findOne(email: string) {
         try {
             const user = await this.usersRepository.findOne({ where: { email: email } });
@@ -75,5 +82,8 @@ export class UsersService {
         } catch (error) {
             throw new Error(`Failed to hard find user: ${error.message}`);
         }
+    }
+    async findOneByRefreshToken(refresh_token: string) {
+        return this.usersRepository.findOne({ where: { refresh_token: refresh_token } });
     }
 }
