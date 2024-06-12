@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserInput, UpdateUserInput, UserOutput } from 'src/graphql';
+import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -11,10 +12,18 @@ export class UsersService {
         @InjectRepository(User)
         private usersRepository: Repository<User>
     ) { }
-
+    hashPassword = (password: string) => {
+        const salt = genSaltSync(10);
+        const hash = hashSync(password, salt);
+        return hash;
+    }
+    async isValidPassword(password, hash) {
+        const result = compareSync(password, hash);
+        return result;
+    }
     async createUser(createUserInput: CreateUserInput) {
         try {
-            console.log("createUserInput", createUserInput)
+            createUserInput.password = await this.hashPassword(createUserInput.password);
             const user = this.usersRepository.create(createUserInput);
             const result = await this.usersRepository.save(user);
             return result;
@@ -37,7 +46,7 @@ export class UsersService {
     }
 
 
-    async deletePet(userId: string) {
+    async deleteUser(userId: string) {
         try {
             const user = await this.usersRepository.findOne({ where: { id: userId } });
             if (!user) throw new NotFoundException('User not found');
