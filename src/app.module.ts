@@ -19,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      context: ({ req, res }) => ({ req, res }),
       driver: ApolloDriver,
       typePaths: ['./**/*.graphql'],
       definitions: {

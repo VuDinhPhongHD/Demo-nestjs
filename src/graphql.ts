@@ -53,15 +53,14 @@ export class UpdateUserInput {
 }
 
 export class LoginResponse {
-    id: string;
-    age?: Nullable<number>;
-    name?: Nullable<string>;
-    email?: Nullable<string>;
     access_token?: Nullable<string>;
+    refresh_token?: Nullable<string>;
 }
 
 export abstract class IMutation {
     abstract login(loginUserInput: LoginUserInput): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
+
+    abstract refresherToken(refresh_token: string): Nullable<LoginResponse> | Promise<Nullable<LoginResponse>>;
 
     abstract createPet(input?: Nullable<CreatePetInput>): Nullable<PetOutput> | Promise<Nullable<PetOutput>>;
 

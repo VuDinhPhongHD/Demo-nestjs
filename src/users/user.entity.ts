@@ -11,7 +11,7 @@ export class User implements UserOutput {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Field(() => String, {description: 'password của người dùng'})
+  @Field(() => String, { description: 'password của người dùng' })
   @Column({ nullable: true })
   password: string;
 
@@ -30,6 +30,10 @@ export class User implements UserOutput {
 
   @OneToMany(() => Pet, (pet) => pet.user)
   pets: Pet[];
+
+  @Field(() => String, { description: 'refresh_token người dùng' })
+  @Column({ nullable: true })
+  refresh_token?: string;
 
   @Field(() => String, { nullable: true, description: 'Thời điểm người dùng bị xóa mềm' })
   @Column({ type: 'timestamp', nullable: true })

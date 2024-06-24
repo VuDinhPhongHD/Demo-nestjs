@@ -1,9 +1,6 @@
 type LoginResponse{
-    id: ID!
-    age: Int
-    name: String
-    email: String
     access_token: String
+    refresh_token: String
 }
 
 input LoginUserInput {
@@ -13,4 +10,5 @@ input LoginUserInput {
 
 type Mutation {
   login(loginUserInput: LoginUserInput!): LoginResponse
+  refresherToken(refresh_token: String!): LoginResponse
 }
