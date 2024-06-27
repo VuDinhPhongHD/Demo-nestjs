@@ -1,15 +1,33 @@
-type Mutation{
-    createUser(input: CreateUserInput): UserOutput
-    updateUser(input: UpdateUserInput): UserOutput
-    deleteUser(userId: String): UserOutput
-    destroyUser(userId: String): UserOutput
+type User {
+  id: ID!
+  age: Int
+  name: String
+  email: String
+  pets: [PetOutput]
 }
 
-type UserOutput{
-    id: ID!
-    age: Int
-    name: String
-    email: String
+type PetOutput {
+  id: ID!
+  age: Int
+  name: String
+  species: String
+  userId: ID
+  deletedAt: String
+}
+
+type UserOutputWithPet {
+  id: ID!
+  age: Int
+  name: String
+  email: String
+  pets: [PetOutput]
+}
+
+type UserOutput {
+  id: ID!
+  age: Int
+  name: String
+  email: String
 }
 
 input CreateUserInput {
@@ -18,9 +36,53 @@ input CreateUserInput {
   email: String
   password: String
 }
+
 input UpdateUserInput {
   id: ID!
   name: String
   age: Int
   email: String
+}
+
+type Mutation {
+  createUser(input: CreateUserInput): UserOutput
+  updateUser(input: UpdateUserInput): UserOutput
+  deleteUser(userId: String): UserOutput
+  destroyUser(userId: String): UserOutput
+
+  createPet(input: CreatePetInput): PetOutput
+  updatePet(input: UpdatePetInput): PetOutput
+  deletePet(petId: String): PetOutput
+  destroyPet(petId: String): PetOutput
+}
+
+type Query {
+  listUser: [UserOutputWithPet]
+  findAll(input: FindPetInput): [PetOutput]
+  queryPetById(petId: String): PetOutputWithUser
+}
+
+input CreatePetInput {
+  name: String
+  age: Int
+  species: String
+  userId: ID
+}
+
+input UpdatePetInput {
+  id: ID!
+  name: String
+  age: Int
+  species: String
+  userId: ID
+}
+
+input FindPetInput {
+  sortBy: String
+  sortOrder: String
+  search: String
+  filterAge: Int
+  filterSpecies: String
+  skip: Int
+  take: Int  
 }
