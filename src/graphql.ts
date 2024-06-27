@@ -83,6 +83,8 @@ export abstract class IQuery {
     abstract findAll(input?: Nullable<FindPetInput>): Nullable<Nullable<PetOutput>[]> | Promise<Nullable<Nullable<PetOutput>[]>>;
 
     abstract queryPetById(petId?: Nullable<string>): Nullable<PetOutputWithUser> | Promise<Nullable<PetOutputWithUser>>;
+
+    abstract listUser(): Nullable<Nullable<UserOutputWithPet>[]> | Promise<Nullable<Nullable<UserOutputWithPet>[]>>;
 }
 
 export class PetOutput {
@@ -102,6 +104,22 @@ export class PetOutputWithUser {
     species?: Nullable<string>;
     user?: Nullable<UserOutput>;
     deletedAt?: Nullable<string>;
+}
+
+export class User {
+    id: string;
+    age?: Nullable<number>;
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+    pets?: Nullable<Nullable<PetOutput>[]>;
+}
+
+export class UserOutputWithPet {
+    id: string;
+    age?: Nullable<number>;
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+    pets?: Nullable<Nullable<PetOutput>[]>;
 }
 
 export class UserOutput {

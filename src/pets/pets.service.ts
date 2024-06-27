@@ -1,8 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, In, Like, Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
-import { CreatePetInput, FindPetInput, PetOutput, UpdatePetInput } from 'src/graphql';
+import {
+  CreatePetInput,
+  FindPetInput,
+  PetOutput,
+  UpdatePetInput,
+} from 'src/graphql';
 import { User } from 'src/users/user.entity';
 
 @Injectable()
@@ -12,7 +17,22 @@ export class PetsService {
     private petsRepository: Repository<Pet>,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) { }
+  ) {}
+
+  async getPetsByBatch(userIds: string[]): Promise<Pet[][]> {
+    const pets = await this.petsRepository.find({
+      where: { userId: In(userIds) },
+    });
+    // Group pets by userId
+    const petsMap = new Map<string, Pet[]>();
+    pets.forEach((pet) => {
+      const list = petsMap.get(pet.userId) || [];
+      list.push(pet);
+      petsMap.set(pet.userId, list);
+    });
+    // Ensure all userIds have corresponding arrays
+    return userIds.map((id) => petsMap.get(id) || []);
+  }
 
   async createPet(createPetInput: CreatePetInput) {
     try {
@@ -30,7 +50,10 @@ export class PetsService {
   }
 
   async queryPetById(id: string) {
-    const pet = await this.petsRepository.findOne({ where: { id }, relations: ['user'] });
+    const pet = await this.petsRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
     //(relations: ['user'] ) TypeORM được thông báo rằng muốn lấy thông tin về người dùng kèm theo thông tin của thú cưng
     if (!pet) throw new Error("Pet doesn't exist.");
     return pet;
@@ -53,7 +76,10 @@ export class PetsService {
       }
 
       if (findPetInput?.filterSpecies) {
-        options.where = { ...options.where, species: Like(`%${findPetInput.filterSpecies}%`) };
+        options.where = {
+          ...options.where,
+          species: Like(`%${findPetInput.filterSpecies}%`),
+        };
       }
       if (findPetInput?.skip) {
         options.skip = findPetInput.skip;
@@ -76,7 +102,9 @@ export class PetsService {
 
   async updatePet(updatePetInput: UpdatePetInput) {
     try {
-      const pet = await this.petsRepository.findOne({ where: { id: updatePetInput.id } });
+      const pet = await this.petsRepository.findOne({
+        where: { id: updatePetInput.id },
+      });
       if (!pet) throw new Error("Pet doesn't exits.");
       Object.assign(pet, updatePetInput);
       const updatedPet = await this.petsRepository.save(pet);
@@ -109,5 +137,4 @@ export class PetsService {
       throw new Error(`Failed to hard delete pet: ${error.message}`);
     }
   }
-
 }

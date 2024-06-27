@@ -7,8 +7,8 @@ import { User } from 'src/users/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([Pet]),
-    TypeOrmModule.forFeature([User])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Pet, User])],
   providers: [PetsResolver, PetsService],
+  exports: [PetsResolver, PetsService],
 })
-export class PetsModule { }
+export class PetsModule {}
